@@ -1,0 +1,63 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Test20</title>
+    <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="input-group" id="centerIpGroup">
+    <label class="input-group-addon">生成测试数据：</label>
+    <div class="input-group centerIp">
+        <label class="input-group-addon">属性名称：</label>
+        <input class="form-control rewardId" type="text" name="rewardId1" id="rewardId1"></input>
+        <label class="input-group-addon">属性值：</label>
+        <input class="form-control rewardNum" type="text" name="rewardNum1" id="rewardNum1"></input>
+        <span class="input-group-btn">
+			                <button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delCenterIpGrp"><span class="glyphicon glyphicon-minus">删除</span></button>
+			          </span>
+    </div>
+    <button class="btn btn-info" type="button" data-toggle="tooltip" title="新增" id="addCenterIpGrpBtn" onclick="addCenterIpGrp(this)" ><span class="glyphicon glyphicon-plus"></span>新增</button>
+    <div class="input-group centerIp">
+        <label class="input-group-addon">MD5KEY：</label>
+        <input class="form-control rewardId" type="text" name="md5Key" id="md5Key"></input>
+        <label class="input-group-addon">AESKEY：</label>
+        <input class="form-control rewardNum" type="text" name="aesKey" id="aesKey"></input>
+    </div>
+    <div>
+    <button type="button" class="btn btn-info">提交</button>
+    </div>
+</div>
+
+<script th:src="@{jquery-3.1.1.js}" type="text/javascript"></script>
+<script th:src="@{bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+<script th:inline="javascript">
+    var rowCount = 1;//(资源)行数默认1行
+
+    //添加资源输入框项
+    function addCenterIpGrp(obj){
+        rowCount++
+        html = '<div class="input-group centerIp">'+
+            '<label class="input-group-addon">属性名称：</label>'+
+            '<input class="form-control rewardId" type="text" name="rewardId'+rowCount+'" id="rewardId'+rowCount+'" ></input>'+
+            ' <label class="input-group-addon">属性值：</label>'+
+            ' <input class="form-control rewardNum" type="text" name="rewardNum'+rowCount+'" id="rewardNum'+rowCount+'" ></input>'+
+            ' <span class="input-group-btn">'+
+            '<button class="btn btn-info" type="button" data-toggle="tooltip" title="删除" id="delCenterIpGrp"><span class="glyphicon glyphicon-minus">删除</span></button>'+
+            ' </span>'+
+            '</div>'
+        obj.insertAdjacentHTML('beforebegin',html)
+    }
+
+    $(document).on('click','#delCenterIpGrp',function(){
+        var el = this.parentNode.parentNode ;
+        var centerIp = $(this).parent().parent().find('#ipInput').val() ;
+        el.parentNode.removeChild(el)
+    })
+
+    function getdata(){
+
+    }
+</script>
+</body>
+</html>
