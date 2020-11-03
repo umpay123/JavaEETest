@@ -1,10 +1,14 @@
 package org.sang;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import org.sang.bean.CeshiDate;
 import org.sang.bean.Person;
+import org.sang.util.AesUtils;
+import org.sang.util.Md5Utils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
@@ -12,10 +16,14 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @SpringBootApplication
@@ -39,7 +47,41 @@ public class Test20Thymeleaf1Application {
         model.addAttribute("people", people);
         return "myinput";
     }
-
+    @RequestMapping("/createDate")
+    @ResponseBody
+    public String createDate(HttpServletRequest request) {
+        System.out.println(request.getParameter("str"));
+        Map<String,Object> map = JSON.parseObject(request.getParameter("str"),Map.class);
+        String aesKey = (String) map.get("aesKey");
+        if (StringUtils.isEmpty(aesKey)){
+            return "aesKey不能为空";
+        }
+        String md5Key = (String) map.get("md5Key");
+        if (StringUtils.isEmpty(md5Key)){
+            return "md5Key不能为空";
+        }
+        String signContent = (String) map.get("signContent");
+        if (StringUtils.isEmpty(signContent)){
+            return "signContent不能为空";
+        }
+        String md5Sign= Md5Utils.digestByMd5(signContent+md5Key);
+        String signature = md5Sign;
+        StringBuffer sb = new StringBuffer();
+        sb.append("{");
+        for (String key:map.keySet()){
+            if (key.equals("signContent")||key.equals("aesKey")||key.equals("md5Key")){
+                continue;
+            }
+            System.out.println(key+"======"+map.get(key));
+            sb.append("\""+key+"\":\"");
+            sb.append(map.get(key)+"\",");
+        }
+        sb.append("\"signature\":\""+md5Sign+"\"}");
+        System.out.println("报文："+sb.toString());
+        String desContentJson = AesUtils.encrypt(sb.toString(),aesKey);
+        System.out.println("加密后报文："+desContentJson);
+        return desContentJson;
+    }
 //    @Bean
 //    public EmbeddedServletContainerFactory servletContainer() {
 //        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
