@@ -1,19 +1,11 @@
 package org.sang;
 
 import com.alibaba.fastjson.JSON;
-import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
-import org.apache.tomcat.util.descriptor.web.SecurityCollection;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
-import org.sang.bean.CeshiDate;
 import org.sang.bean.Person;
 import org.sang.util.AesUtils;
 import org.sang.util.Md5Utils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -72,7 +64,6 @@ public class Test20Thymeleaf1Application {
             if (key.equals("signContent")||key.equals("aesKey")||key.equals("md5Key")){
                 continue;
             }
-            System.out.println(key+"======"+map.get(key));
             sb.append("\""+key+"\":\"");
             sb.append(map.get(key)+"\",");
         }
@@ -81,6 +72,22 @@ public class Test20Thymeleaf1Application {
         String desContentJson = AesUtils.encrypt(sb.toString(),aesKey);
         System.out.println("加密后报文："+desContentJson);
         return desContentJson;
+    }
+    @RequestMapping("/decrypt")
+    @ResponseBody
+    public String decrypt(HttpServletRequest request) {
+       String aesKey = request.getParameter("aesKey");
+       String signContent = request.getParameter("signContent");
+        System.out.println("加密内容："+signContent+",加密密钥："+aesKey);
+        if (StringUtils.isEmpty(aesKey)){
+            return "aesKey不能为空";
+        }
+        if (StringUtils.isEmpty(signContent)){
+            return "signContent不能为空";
+        }
+        String result =   AesUtils.decrypt(signContent,aesKey);
+        System.out.println("解密内容："+result);
+        return result;
     }
 //    @Bean
 //    public EmbeddedServletContainerFactory servletContainer() {

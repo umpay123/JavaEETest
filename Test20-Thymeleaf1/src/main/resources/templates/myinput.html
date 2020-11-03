@@ -31,7 +31,21 @@
     <button type="button" class="btn btn-info" onclick="getData(this)">提交</button>
     </div>
     <div id="aesConnect">
-ssss
+    </div>
+</div>
+
+<div class="input-group" id="centerIpGroup1">
+    <label class="input-group-addon">解密报文：</label>
+    <div class="input-group centerIp">
+        <label class="input-group-addon">signContent：</label>
+        <input class="form-control signContent" type="text" name="signContent" id="signContent1"></input>
+        <label class="input-group-addon">AESKEY：</label>
+        <input class="form-control aesKey" type="text" name="aesKey" id="aesKey1"></input>
+    </div>
+    <div>
+        <button type="button" class="btn btn-info" onclick="decrypt(this)">解密</button>
+    </div>
+    <div id="decryptStr">
     </div>
 </div>
 
@@ -141,6 +155,36 @@ ssss
             obj[k] = v;
         }
         return obj;
+    }
+
+    function decrypt(obj){
+        var aesKey = $('div .input-group #aesKey1').val();
+        var signContent = $('div .input-group #signContent1').val();
+        $.ajax({
+            type: "POST",
+            url:'/decrypt',
+            data:"aesKey="+aesKey+"&signContent="+encodeURIComponent(signContent),
+            cache:false,//false是不缓存，true为缓存
+            async:true,//true为异步，false为同步
+            beforeSend:function(){
+
+            },
+            success:function(result){
+                alert(result);
+                var aesstr = document.getElementById("decryptStr");
+                //  alert(aesstr.innerHTML);
+                aesstr.innerHTML = '解密报文：'+result;
+                // $("#aesConnect").innerHTML=html
+            },
+            complete:function(){
+
+            },
+            error:function(e){
+                //请求失败时
+                console.log(e);
+                alert("失败了"+e);
+            }
+        })
     }
 </script>
 </body>
