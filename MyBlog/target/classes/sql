@@ -4,7 +4,7 @@ create table article(id integer primary key auto_increment,title varchar(128),co
 create table category(id integer primary key auto_increment,name varchar(64),display_name varchar(64))default character set=utf8;
 create table comments(id integer primary key auto_increment,article_id integer,comm_ip varchar(64),comment text)default character set=utf8;
 create table user(id integer primary key auto_increment,username varchar(64),password varchar(64))default character set=utf8;
-insert into user(username,password) values('绿水悠悠','123');
+insert into user(username,password) values('123','123');
 insert into category(name,display_name) values('firstPage','首页');
 insert into category(name,display_name) values('webPage','JavaWeb专栏');
 insert into category(name,display_name) values('androidPage','Android专栏');

@@ -4,7 +4,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!--普通创建方式-->
-    <bean class="org.sang.User" id="#user#" scope="prototype"/>
+    <bean class="org.sang.User" id="user" scope="prototype"/>
     <!--静态工厂创建-->
     <bean id="user2" class="org.sang.User2Factory" factory-method="getInstance"/>
     <!--实例工厂创建-->
